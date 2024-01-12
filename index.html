@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+    <title>Tic Tac Toe</title>
+</head>
+<body>
+    <div class="main-container">
+        <h1 id="header">Tic Tac Toe</h1>
+        <div class="mode-controls">
+            <button id="mode-btn" onclick="ShowModeModal()">Mode</button>
+            <p id="message">message</p>
+            <button id="restart-btn" onclick="RestartGame()">Restart</button>
+        </div>
+        <div class="marker-controls">
+            <button id="x-marker-btn" onclick="SetMarker(this)">x</button>
+            <button id="o-marker-btn" onclick="SetMarker(this)">o</button>
+        </div>
+        <div id="field"></div>
+    </div>
+</body>
+<div id="mode-modal" class="mode-modal">
+    <h1>Choose mode
+        <button id="exit-btn" onclick="HideModeModal()">x</button>
+    </h1>
+    <div class="mode-buttons">
+        <button id="friend-btn">Friend</button>
+        <button id="computer-btn">Computer</button>
+    </div>
+</div>
+</html>

@@ -1,0 +1,89 @@
+body{
+    margin: 0;
+}
+.main-container{
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top:calc(50% - 35vh);
+    left:calc(50% - 30vw);
+    width: 60vw;
+    height: 70vh;
+    background-color: whitesmoke;
+    border:none;
+    border-radius:10px;
+    box-shadow: 2px 5px 5px 5px #00000050;
+}
+#header{
+    width:100%;
+    height:10%;
+    border: solid red 2px;
+    text-align: center;
+    align-self:center;
+    margin:0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.mode-controls{
+    display: flex;
+    flex-direction: row;
+    border:solid red 2px;
+    width:100%;
+    height:10%;
+    justify-content: space-between;
+}
+.marker-controls{
+    display: flex;
+    flex-direction: row;
+    border:solid red 2px;
+    width:100%;
+    height:10%;
+    justify-content: space-between;
+    align-items: center;
+    justify-content: center;
+}
+#field
+{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border:solid hotpink 2px;
+    border-radius:10px;
+    overflow: hidden;
+    width:300px;
+    height:300px;
+    align-self:center;
+}
+#x-marker-btn, #o-marker-btn{
+    width:30%;
+    height:50%;
+    border:solid hotpink 1px;
+    margin:20px;
+    border-radius: 5px;
+}
+#field > div{
+    border:solid hotpink 1px;
+    text-align: center;
+    align-items: center;
+}
+.mode-modal
+{
+    display: none;
+    width:250px;
+    height:20vh;
+    background-color: whitesmoke;
+    border-radius:10px;
+    border:none;
+}
+
+.mode-modal.active {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: calc(50% - 10vh);
+    left: calc(50% - 125px);
+}
+
+#exit-btn{
+    margin:0;
+}
