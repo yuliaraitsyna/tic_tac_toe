@@ -11,8 +11,12 @@ const Player = (marker) => {
         _marker = marker;
     }
 
+    const ToggleMarker = () =>{
+        _marker = (_marker === 'x') ? 'o' : 'x';
+    }
+
     return {
-        GetMarker, SetMarker
+        GetMarker, SetMarker, ToggleMarker
     };
 };
 
@@ -29,10 +33,6 @@ function HideModeModal() {
     modal.classList.remove("active");
 }
 
-function RestartGame() {
-    cells.forEach(cell => cell.innerHTML = "");
-    message.innerHTML = "Game is not started!";
-}
 
 const Mode = { FRND: 0, CMPT: 1, NONE: 2 }
 const friendBtn = document.getElementById("friend-btn");
@@ -52,22 +52,33 @@ function SetGameMode(btn) {
 }
 
 class Game{
-    constructor(marker, mode){
+    constructor(marker, mode, status){
         this.currentPlayer = Object.create(Player(marker));
         this.mode = mode;
+        this.status = status;
     }
     SetCurrentPlayer(marker){
         this.currentPlayer.SetMarker(marker);
     }
-    Start(){
-        
+    //recheck
+    SwitchCurrentPlayer(){
+        this.currentPlayer.ToggleMarker();
     }
+    Start(){
+        this.status = true;
+    }
+    Stop(){
+        this.status = false;
+    }
+    //maybe destructor to delete current game and create new one
     Restart(){
-        
+        this.currentPlayer.SetMarker('');
+        this.mode = Mode.NONE;
+        this.status = false;
     }
 }
 
-const currentGame = new Game('', Mode.NONE);
+const currentGame = new Game('', Mode.NONE, false);
 
 function StartGameValidator() {
     if (this.mode === Mode.NONE) {
@@ -87,13 +98,27 @@ function SetMarker(btn)
     message.innerHTML = "Player " + btn.innerHTML;
     currentGame.SetCurrentPlayer(btn.innerHTML);
 }
-const cells = [];
+function RestartGame() {
+    cells.forEach(cell => cell.innerHTML = "");
+    message.innerHTML = "Game is not started!";
+    currentGame.Restart();
+}
 
+const cells = [];
+function MarkCell(cell){
+    cell.innerHTML = currentGame.currentPlayer.GetMarker();
+}
 function SetField() {
     for (let i = 1; i < 10; i++) {
         let cell = document.createElement('div');
         cell.classList.add("cell" + i);
-        cell.addEventListener('click', StartGameValidator.bind(currentGame));
+        cell.addEventListener('click', function () {
+            StartGameValidator.call(currentGame);
+            if (currentGame.status) {
+                MarkCell(this);
+                currentGame.SwitchCurrentPlayer();
+            }
+        });
         cells.push(cell);
         field.append(cell);
     }
