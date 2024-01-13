@@ -60,12 +60,38 @@ function SetGameMode(btn) {
     }
     HideModeModal();
 }
+const winCases = [
+    [1, 2, 3], 
+    [4, 5, 6], 
+    [7, 8, 9], 
+    [1, 4, 7], 
+    [2, 5, 8], 
+    [3, 6, 9],
+    [1, 5, 9],
+    [3, 5, 7]
+];
 
 class Game{
     constructor(marker, mode, status){
         this.currentPlayer = Object.create(Player(marker));
         this.mode = mode;
         this.status = status;
+    }
+    
+    CheckWin() {
+        for (const winCase of winCases) {
+            const [a, b, c] = winCase;
+            if (cells[a - 1].innerHTML === this.currentPlayer.GetMarker() && cells[b - 1].innerHTML === this.currentPlayer.GetMarker() && cells[c - 1].innerHTML === this.currentPlayer.GetMarker()) {
+                cells[a-1].style.backgroundColor = "hotpink";
+                cells[b-1].style.backgroundColor = "hotpink";
+                cells[c-1].style.backgroundColor = "hotpink";
+                return true;
+            }
+        }
+        return false;
+    }
+    CheckDraw() {
+        return cells.every(cell => cell.classList.contains("marked"));
     }
     SetCurrentPlayer(marker){
         this.currentPlayer.SetMarker(marker);
@@ -85,6 +111,9 @@ class Game{
     }
     Stop(){
         this.status = false;
+        message.innerHTML = this.currentPlayer.GetMarker() + " wins!";
+        cells.forEach(cell => cell.classList.add("marked"));
+        console.log("Status: game is stopped");
     }
     //maybe destructor to delete current game and create new one
     Restart(){
@@ -97,6 +126,10 @@ class Game{
 const currentGame = new Game('', Mode.NONE, false);
 
 function StartGameValidator() {
+    if (this.status) {
+        return;
+    }
+
     if (this.mode === Mode.NONE) {
         alert("Please, choose a game mode!");
         console.log("Error: mode is not chosen");
@@ -106,7 +139,6 @@ function StartGameValidator() {
         console.log("Error: marker is not chosen");
     }
     else {
-        message.innerHTML = "Game is started!";
         currentGame.Start();
     }
 }
@@ -136,7 +168,38 @@ function MarkCell(cell){
         let cellIndex = cell.classList[0];
         console.log("Success: " + cellIndex + " is marked with " + cellMarker);
         cell.classList.add("marked");
-        currentGame.SwitchCurrentPlayer();
+        if (currentGame.mode === Mode.CMPT && currentGame.status) {
+            if(currentGame.CheckWin()){
+                currentGame.Stop();
+                return;
+            }
+            const emptyCells = cells.filter(cell => !cell.classList.contains("marked"));
+            if (emptyCells.length > 0) {
+                const randomIndex = Math.floor(Math.random() * emptyCells.length);
+                setTimeout(() => {
+                    emptyCells[randomIndex].innerHTML = currentGame.currentPlayer.GetMarker();
+                    emptyCells[randomIndex].classList.add("marked");
+                    currentGame.SwitchCurrentPlayer();
+                }, 1000);
+                if(currentGame.CheckWin()){
+                    currentGame.Stop();
+                    return;
+                }
+            } else {
+                currentGame.Stop();
+            }
+        }
+        if(currentGame.CheckWin()){
+            currentGame.Stop();
+            return;
+        }
+        if (currentGame.CheckDraw() && !currentGame.CheckWin()) {
+            currentGame.Stop();
+            message.innerHTML = "It's a draw!";
+            console.log("Status: game is a draw");
+        } else {
+            currentGame.SwitchCurrentPlayer();
+        }
     }
 }
 
@@ -166,6 +229,7 @@ function RestartGame() {
     computerBtn.disabled = false;
     friendBtn.classList.remove("chosen");
     computerBtn.classList.remove("chosen");
+    cells.forEach(cell => cell.style.backgroundColor = "transparent");
     console.log("Status: game is restarted");
     message.innerHTML = "";
     currentGame.Restart();
