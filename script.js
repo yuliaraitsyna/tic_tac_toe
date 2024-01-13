@@ -27,6 +27,9 @@ const exitBtn = document.getElementById("exit-btn");
 const xBtn = document.getElementById("x-marker-btn");
 const oBtn = document.getElementById("o-marker-btn");
 const field = document.getElementById("field");
+const modeBtn = document.getElementById("mode-btn");
+const restartBtn = document.getElementById("restart-btn");
+const header = document.getElementById("header");
 
 function ShowModeModal() {
     modal.classList.add("active");
@@ -72,19 +75,28 @@ const winCases = [
 ];
 
 class Game{
-    constructor(marker, mode, status){
+    constructor(marker, mode, status, theme){
         this.currentPlayer = Object.create(Player(marker));
         this.mode = mode;
         this.status = status;
+        this.theme = theme;
     }
     
     CheckWin() {
         for (const winCase of winCases) {
             const [a, b, c] = winCase;
             if (cells[a - 1].innerHTML === this.currentPlayer.GetMarker() && cells[b - 1].innerHTML === this.currentPlayer.GetMarker() && cells[c - 1].innerHTML === this.currentPlayer.GetMarker()) {
-                cells[a-1].style.backgroundColor = "hotpink";
-                cells[b-1].style.backgroundColor = "hotpink";
-                cells[c-1].style.backgroundColor = "hotpink";
+                if(this.theme === "light"){
+                    cells[a-1].style.backgroundColor = "hotpink";
+                    cells[b-1].style.backgroundColor = "hotpink";
+                    cells[c-1].style.backgroundColor = "hotpink";
+                }
+                else{
+                    cells[a-1].style.backgroundColor = "purple";
+                    cells[b-1].style.backgroundColor = "purple";
+                    cells[c-1].style.backgroundColor = "purple";
+                }
+                
                 return true;
             }
         }
@@ -123,7 +135,7 @@ class Game{
     }
 }
 
-const currentGame = new Game('', Mode.NONE, false);
+const currentGame = new Game('', Mode.NONE, false, "light");
 
 function StartGameValidator() {
     if (this.status) {
@@ -243,3 +255,44 @@ function RestartGame() {
 }
 friendBtn.addEventListener('click', () => SetGameMode(friendBtn));
 computerBtn.addEventListener('click', () => SetGameMode(computerBtn));
+
+const themeBtn = document.getElementById("theme-btn");
+const slider = document.getElementById("theme-slider");
+const main = document.getElementById("main");
+const gameplay = document.querySelector(".main-container");
+
+themeBtn.addEventListener('change', function () {
+    if (themeBtn.checked) {
+        currentGame.theme = "dark"
+        slider.style.background = "linear-gradient(90deg, purple 0%, black 100%)";
+        main.classList.add("dark-theme-bg");
+        gameplay.classList.add("dark-theme");
+        field.classList.add("dark-theme");
+        cells.forEach(cell => cell.classList.add("dark-theme"));
+        oBtn.classList.add("dark-theme");
+        xBtn.classList.add("dark-theme");
+        friendBtn.classList.add("dark-theme");
+        computerBtn.classList.add("dark-theme");
+        modeBtn.classList.add("dark-theme");
+        restartBtn.classList.add("dark-theme");
+        header.classList.add("dark-theme");
+        message.classList.add("dark-theme");
+
+    } else {
+        slider.style.background = "";
+        currentGame.theme = "light";
+        slider.style.background = "linear-gradient(90deg, hotpink 0%, rgb(193, 154, 255) 100%)";
+        main.classList.remove("dark-theme-bg");
+        gameplay.classList.remove("dark-theme");
+        field.classList.remove("dark-theme");
+        cells.forEach(cell => cell.classList.remove("dark-theme"));
+        oBtn.classList.remove("dark-theme");
+        xBtn.classList.remove("dark-theme");
+        friendBtn.classList.remove("dark-theme");
+        computerBtn.classList.remove("dark-theme");
+        modeBtn.classList.remove("dark-theme");
+        restartBtn.classList.remove("dark-theme");
+        header.classList.remove("dark-theme");
+        message.classList.remove("dark-theme");
+    }
+});

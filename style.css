@@ -182,3 +182,75 @@ root{
     background-color: transparent;
     border:none;
 }
+
+.theme-slider{
+    
+    position:fixed;
+    top:10px;
+    left:10px;
+    width:40px;
+    height:20px;
+    border-radius:30px;
+
+    background: linear-gradient(90deg, hotpink 0%, rgb(193, 154, 255) 100%);
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#theme-btn{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+#theme-btn::after{
+  content: "";
+  display: inline-block;
+  width:20px;
+  height:20px;
+  position: absolute;
+  top:0;
+  left:0;
+  background-color: white;
+  box-shadow: 3px 2px 3px rgba(0, 0, 0, 0.233);
+  border-radius: 50%;
+  transform: translateX(0);
+}
+
+#theme-btn:checked::after{
+    transform: translateX(calc(20px));
+    box-shadow: -3px 2px 3px rgba(0, 0, 0, 0.233);
+}
+
+.dark-theme-bg{
+    background-color: rgb(24, 23, 24);
+}
+
+.main-container.dark-theme{
+    background: rgb(24, 23, 24);
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2), -2px -3px 7px rgba(255, 255, 255, 0.2), inset -2px -2px 5px rgba(255, 255, 255, 0.08);
+}
+
+#field.dark-theme{
+    box-shadow:none;
+    border: solid purple 3px;
+}
+
+#field > div.dark-theme{
+    border:solid purple 1px;
+    color:white;
+    text-shadow: none;
+}
+
+#x-marker-btn.dark-theme, #o-marker-btn.dark-theme, #friend-btn.dark-theme, #computer-btn.dark-theme, #mode-btn.dark-theme, #restart-btn.dark-theme{
+    background-color: purple;
+    color:white;
+    border:solid black 1px;
+}
+
+#header.dark-theme{
+    color:white;
+}
+
+#message.dark-theme{
+    color:white;
+}
