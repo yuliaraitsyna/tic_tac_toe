@@ -161,38 +161,45 @@ function SetMarker(btn)
 
 
 const cells = [];
-function MarkCell(cell){
-    if(!cell.classList.contains("marked")){
+function MarkCell(cell) {
+    if (!cell.classList.contains("marked")) {
         cell.innerHTML = currentGame.currentPlayer.GetMarker();
         let cellMarker = cell.innerHTML;
         let cellIndex = cell.classList[0];
         console.log("Success: " + cellIndex + " is marked with " + cellMarker);
         cell.classList.add("marked");
+
+        if (currentGame.CheckWin()) {
+            currentGame.Stop();
+            return;
+        }
+
         if (currentGame.mode === Mode.CMPT && currentGame.status) {
-            if(currentGame.CheckWin()){
-                currentGame.Stop();
-                return;
-            }
             const emptyCells = cells.filter(cell => !cell.classList.contains("marked"));
             if (emptyCells.length > 0) {
                 const randomIndex = Math.floor(Math.random() * emptyCells.length);
                 setTimeout(() => {
                     emptyCells[randomIndex].innerHTML = currentGame.currentPlayer.GetMarker();
                     emptyCells[randomIndex].classList.add("marked");
+
+                    // Check for win conditions after the computer's move
+                    if (currentGame.CheckWin()) {
+                        currentGame.Stop();
+                        return;
+                    }
+
                     currentGame.SwitchCurrentPlayer();
                 }, 1000);
-                if(currentGame.CheckWin()){
-                    currentGame.Stop();
-                    return;
-                }
             } else {
                 currentGame.Stop();
             }
         }
-        if(currentGame.CheckWin()){
+
+        if (currentGame.CheckWin()) {
             currentGame.Stop();
             return;
         }
+
         if (currentGame.CheckDraw() && !currentGame.CheckWin()) {
             currentGame.Stop();
             message.innerHTML = "It's a draw!";
