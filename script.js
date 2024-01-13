@@ -79,6 +79,8 @@ class Game{
         this.status = true;
         xBtn.disabled = true;
         oBtn.disabled = true;
+        friendBtn.disabled = true;
+        computerBtn.disabled = true;
         console.log("Status: game is started");
     }
     Stop(){
@@ -124,26 +126,18 @@ function SetMarker(btn)
     currentGame.SetCurrentPlayer(btn.innerHTML);
 }
 
-function RestartGame() {
-    cells.forEach(cell => cell.innerHTML = "");
-    xBtn.disabled = false;
-    oBtn.disabled = false;
-    xBtn.classList.remove("chosen");
-    oBtn.classList.remove("chosen");
-    friendBtn.disabled = false;
-    computerBtn.disabled = false;
-    friendBtn.classList.remove("chosen");
-    computerBtn.classList.remove("chosen");
-    console.log("Status: game is restarted");
-    currentGame.Restart();
-}
+
 
 const cells = [];
 function MarkCell(cell){
-    cell.innerHTML = currentGame.currentPlayer.GetMarker();
-    let cellMarker = cell.innerHTML;
-    let cellIndex = cell.classList[0];
-    console.log("Success: " + cellIndex + " is marked with " + cellMarker);
+    if(!cell.classList.contains("marked")){
+        cell.innerHTML = currentGame.currentPlayer.GetMarker();
+        let cellMarker = cell.innerHTML;
+        let cellIndex = cell.classList[0];
+        console.log("Success: " + cellIndex + " is marked with " + cellMarker);
+        cell.classList.add("marked");
+        currentGame.SwitchCurrentPlayer();
+    }
 }
 
 function SetField() {
@@ -154,7 +148,6 @@ function SetField() {
             StartGameValidator.call(currentGame);
             if (currentGame.status) {
                 MarkCell(this);
-                currentGame.SwitchCurrentPlayer();
             }
         });
         cells.push(cell);
@@ -162,6 +155,20 @@ function SetField() {
     }
 }
 SetField();
-
+function RestartGame() {
+    cells.forEach(cell => cell.innerHTML = ' ');
+    cells.forEach(cell => cell.classList.remove("marked"));
+    xBtn.disabled = false;
+    oBtn.disabled = false;
+    xBtn.classList.remove("chosen");
+    oBtn.classList.remove("chosen");
+    friendBtn.disabled = false;
+    computerBtn.disabled = false;
+    friendBtn.classList.remove("chosen");
+    computerBtn.classList.remove("chosen");
+    console.log("Status: game is restarted");
+    message.innerHTML = "";
+    currentGame.Restart();
+}
 friendBtn.addEventListener('click', () => SetGameMode(friendBtn));
 computerBtn.addEventListener('click', () => SetGameMode(computerBtn));

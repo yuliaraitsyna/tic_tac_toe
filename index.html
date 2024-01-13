@@ -8,12 +8,13 @@
     <title>Tic Tac Toe</title>
 </head>
 <body>
+<main>
     <div class="overlay" id="overlay"></div>
     <div class="main-container">
         <h1 id="header">Tic Tac Toe</h1>
         <div class="mode-controls">
             <button id="mode-btn" onclick="ShowModeModal()">Mode</button>
-            <p id="message">message</p>
+            <p id="message"></p>
             <button id="restart-btn" onclick="RestartGame()">Restart</button>
         </div>
         <div class="marker-controls">
@@ -22,11 +23,20 @@
         </div>
         <div id="field"></div>
     </div>
+</main>
+    <footer>
+        <p>
+          Copyright ©
+          yuliaraitsyna
+        </p>
+        <a href="https://github.com/yuliaraitsyna" target="_blank">
+          <i class="fab fa-github"></i>
+        </a>
+    </footer>  
 </body>
 <div id="mode-modal" class="mode-modal">
-    <h1>Choose mode
-        <button id="exit-btn" onclick="HideModeModal()">x</button>
-    </h1>
+    <button id="exit-btn" onclick="HideModeModal()">x</button>
+    <h1 id="mode-header">Choose mode</h1>
     <div class="mode-buttons">
         <button id="friend-btn">Friend</button>
         <button id="computer-btn">Computer</button>
