@@ -1,24 +1,20 @@
-"use strict";
 
-const Player = (marker) => {
-    let _marker = marker;
+const Player = {
+    marker: "",
 
-    const GetMarker = () => {
-        return _marker;
+    get Marker() {
+        return this.marker;
+    },
+
+    set Marker(value) {
+        this.marker = value;
+    },
+
+    ToggleMarker() {
+        this.marker = (this.marker === 'x') ? 'o' : 'x';
     }
-
-    const SetMarker = (marker) =>{
-        _marker = marker;
-    }
-
-    const ToggleMarker = () =>{
-        _marker = (_marker === 'x') ? 'o' : 'x';
-    }
-
-    return {
-        GetMarker, SetMarker, ToggleMarker
-    };
 };
+
 
 const overlay = document.getElementById("overlay");
 const message = document.getElementById("message");
@@ -74,18 +70,23 @@ const winCases = [
     [3, 5, 7]
 ];
 
-class Game{
-    constructor(marker, mode, status, theme){
-        this.currentPlayer = Object.create(Player(marker));
+class Game {
+    constructor(marker, mode, status, theme) {
+        this.currentPlayer = Object.create(Player);
+        this.currentPlayer.Marker = marker;
         this.mode = mode;
         this.status = status;
         this.theme = theme;
+    }
+
+    SetCurrentPlayer(marker) {
+        this.currentPlayer.Marker = marker;
     }
     
     CheckWin() {
         for (const winCase of winCases) {
             const [a, b, c] = winCase;
-            if (cells[a - 1].innerHTML === this.currentPlayer.GetMarker() && cells[b - 1].innerHTML === this.currentPlayer.GetMarker() && cells[c - 1].innerHTML === this.currentPlayer.GetMarker()) {
+            if (cells[a - 1].innerHTML === this.currentPlayer.Marker && cells[b - 1].innerHTML === this.currentPlayer.Marker && cells[c - 1].innerHTML === this.currentPlayer.Marker) {
                 if(this.theme === "light"){
                     cells[a-1].style.backgroundColor = "hotpink";
                     cells[b-1].style.backgroundColor = "hotpink";
@@ -105,13 +106,10 @@ class Game{
     CheckDraw() {
         return cells.every(cell => cell.classList.contains("marked"));
     }
-    SetCurrentPlayer(marker){
-        this.currentPlayer.SetMarker(marker);
-    }
     //recheck
     SwitchCurrentPlayer(){
         this.currentPlayer.ToggleMarker();
-        console.log("Player is switched to " + this.currentPlayer.GetMarker());
+        console.log("Player is switched to " + this.currentPlayer.Marker);
     }
     Start(){
         this.status = true;
@@ -123,13 +121,13 @@ class Game{
     }
     Stop(){
         this.status = false;
-        message.innerHTML = this.currentPlayer.GetMarker() + " wins!";
+        message.innerHTML = this.currentPlayer.Marker + " wins!";
         cells.forEach(cell => cell.classList.add("marked"));
         console.log("Status: game is stopped");
     }
     //maybe destructor to delete current game and create new one
     Restart(){
-        this.currentPlayer.SetMarker('');
+        this.currentPlayer.Marker = '';
         this.mode = Mode.NONE;
         this.status = false;
     }
@@ -146,7 +144,7 @@ function StartGameValidator() {
         alert("Please, choose a game mode!");
         console.log("Error: mode is not chosen");
     }
-    else if (this.currentPlayer.GetMarker() === ''){
+    else if (this.currentPlayer.Marker === ''){
         alert("Please, choose a marker!");
         console.log("Error: marker is not chosen");
     }
@@ -175,7 +173,7 @@ function SetMarker(btn)
 const cells = [];
 function MarkCell(cell) {
     if (!cell.classList.contains("marked")) {
-        cell.innerHTML = currentGame.currentPlayer.GetMarker();
+        cell.innerHTML = currentGame.currentPlayer.Marker;
         let cellMarker = cell.innerHTML;
         let cellIndex = cell.classList[0];
         console.log("Success: " + cellIndex + " is marked with " + cellMarker);
@@ -191,7 +189,7 @@ function MarkCell(cell) {
             if (emptyCells.length > 0) {
                 const randomIndex = Math.floor(Math.random() * emptyCells.length);
                 setTimeout(() => {
-                    emptyCells[randomIndex].innerHTML = currentGame.currentPlayer.GetMarker();
+                    emptyCells[randomIndex].innerHTML = currentGame.currentPlayer.Marker;
                     emptyCells[randomIndex].classList.add("marked");
 
                     // Check for win conditions after the computer's move
